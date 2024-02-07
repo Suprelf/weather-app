@@ -1,10 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './App.scss';
+import Panel from './components/panel/panel';
 
 function App() {
   return (
-    <>Heelo</>
+    <>
+      <Panel></Panel>
+      <Panel></Panel>
+      <Panel></Panel>
+      <Panel></Panel>
+    </>
+
+
   );
 }
 
