@@ -1,10 +1,12 @@
 import React from 'react';
-import './App.css';
-import './search.css';
+import './search.scss';
 
 function Search() {
   return (
-    <>Search</>
+    <div className='search-container'>
+      <input className='search-input'></input>
+      <button className='search-button'>Add</button>
+    </div>
   );
 }
 

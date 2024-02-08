@@ -16,3 +16,26 @@ $chart-warm-color: #FFA25B;
 $gray-dark-color: #5B8CFF;
 $chart-default-color: #FFF4F4;
 
+.app-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 25px;
+
+    .app-language {
+
+    }
+
+    .app-seacrh {
+
+    }
+
+    .app-panels {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 16px
+    }
+}
+

@@ -1,0 +1,20 @@
+@import '../../App.scss';
+
+.language-container {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+
+    .language-select {
+        border: none;
+        color: #AFAFAF;
+        cursor: pointer;
+
+        .language-option {
+            font-size: 16px;
+            color: initial;
+        }
+    }
+
+
+}

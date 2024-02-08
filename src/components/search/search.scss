@@ -1,0 +1,40 @@
+@import '../../App.scss';
+
+.search-container {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+
+    margin: 120px 0;
+}
+
+.search-input {
+    width: 569px;
+    height: 40px;
+    padding: 0 10px;
+
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 5px;
+    border: none;
+}
+textarea:focus, .search-input:focus{
+    outline: none;
+}
+
+.search-button {
+    width: 112px;
+    height: 40px;
+
+    background: $accent-color 0% 0% no-repeat padding-box;
+    box-shadow: 0px 3px 6px #00000029;
+    border-radius: 5px;
+    border: none;
+
+    color: $primary-color;
+    cursor: pointer;
+}
