@@ -4,15 +4,28 @@
     position: absolute;
     top: 25px;
     right: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .language-header {
+        display: flex;
+        flex-direction: row;
+        gap: 6px;
+    }
 
     .language-select {
-        border: none;
-        color: #AFAFAF;
+        width: 71px;
+        height: 78px;
+        box-shadow: 0px 3px 6px #00000029;
         cursor: pointer;
 
         .language-option {
             font-size: 16px;
             color: initial;
+        }
+        .language-option:hover {
+            background: $gray-light-color
         }
     }
 

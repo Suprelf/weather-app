@@ -27,15 +27,16 @@ $chart-default-color: #FFF4F4;
     }
 
     .app-seacrh {
-
+        height: 290px;
     }
 
     .app-panels {
         display: flex;
         flex-direction: row;
-        align-items: flex-start;
         flex-wrap: wrap;
-        gap: 16px
+        gap: 16px;
+
+        justify-content: space-between;
     }
 }
 
