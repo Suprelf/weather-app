@@ -1,41 +1,34 @@
 import React from 'react';
 import './search.scss';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
 
 function Search() {
+
+  function handleSearch(e: any) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const formJson = Object.fromEntries(formData.entries());
+    console.log(formJson);
+  }
+
+
+
   return (
     <div className='search-container'>
-      <div className='search-functional'>
-        <input className='search-input'></input>
-        <button className='search-button'>Add</button>
-      </div>
+
+      <form onSubmit={handleSearch} className='search-functional'>
+        <input className='search-input' name='city'></input>
+        <button className='search-button' type="submit">Add</button>
+      </form>
 
       <div className='search-autocomplete'>
 
+        <div className='search-autocomplete-item'>
+          adasdsdaada
+        </div>
 
-        <div className='search-autocomplete-item'>
-          adasdsdaada
-        </div>
-        <div className='search-autocomplete-item'>
-          adasdsdaada
-        </div>
-        <div className='search-autocomplete-item'>
-          adasdsdaada
-        </div>
-        <div className='search-autocomplete-item'>
-          adasdsdaada
-        </div>
-        <div className='search-autocomplete-item'>
-          adasdsdaada
-        </div>
-        <div className='search-autocomplete-item'>
-          adasdsdaada
-        </div>
-        <div className='search-autocomplete-item'>
-          adasdsdaada
-        </div>
-        
       </div>
 
     </div>
