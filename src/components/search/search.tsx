@@ -1,5 +1,7 @@
 import React from 'react';
 import './search.scss';
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
 
 function Search() {
   return (
