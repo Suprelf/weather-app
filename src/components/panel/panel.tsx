@@ -1,55 +1,117 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './panel.scss';
+import City from '../../interfaces';
 
-function Panel() {
+function Panel(props: City) {
+
+  const [smallName, setSmallName] = useState<boolean>(false)
+  const [temperatureDigit, setTemperatureDigit] = useState<string>('')
+  const [feelsDigit, setFeelsDigit] = useState<string>('')
+
+  const [metrics, setMetrics] = useState<string>('Celsius')
+  const [metricsTouched, setMetricsTouched] = useState<boolean>(false)
+  function switchMetrics(format: string) {
+
+    setMetricsTouched(true)
+    if (format !== metrics) {
+      setMetrics(format)
+    }
+
+  }
+
+  const [temperatureValue, setTemperatureValue] = useState<number>(props.temperature)
+  const [feelsValue, setFeelsValue] = useState<number>(props.feels)
+
+
+  useEffect(() => {
+    if (props.name.length > 30) {
+      setSmallName(true)
+    }
+
+    if (temperatureValue > 0) {
+      setTemperatureDigit('+')
+    } else setTemperatureDigit('')
+
+    if (feelsValue > 0) {
+      setFeelsDigit('+')
+    } else setFeelsDigit('')
+
+    if (metrics === 'Celsius' && metricsTouched) {
+      setTemperatureValue((temperatureValue - 32) * (5 / 9))
+      setFeelsValue((feelsValue - 32) * (5 / 9))
+
+    } else if (metrics === 'Fahrenheit' && metricsTouched) {
+      setTemperatureValue((temperatureValue * (9 / 5)) + 32)
+      setFeelsValue((feelsValue * (9 / 5)) + 32)
+
+    }
+
+  }, [metrics])
+
+
+
   return (
-      <div className='panel-container'>
+    <div className='panel-container' style={{ backgroundColor: (props.temperature > 0) ? '#FFFAF1' : '#F1F2FF' }}>
 
-        <div className='panel-header'>
-          <div className='panel-header-left'>
-            <div>Dinpro, UA</div>
-            <div>Fri, 19 February, 10:17</div>
-          </div>
-
-          <div className='panel-header-right'>
-            <div>icon</div>
-            <div>Sunny</div>
-          </div>
+      <div className='panel-header'>
+        <div className='panel-header-left'>
+          <div className='panel-header-left-item' style={{ fontSize: smallName ? '14px' : '16px' }}>{props.name}</div>
+          <div className='panel-header-left-item'>{props.date}</div>
         </div>
 
-        <div className='panel-chart'>
-          
+        <div className='panel-header-right'>
+          <div>icon</div>
+          <div>{props.weather}</div>
         </div>
+      </div>
 
-        <div className='panel-footer'>
-          <div className='panel-footer-left'>
-
-            <div className='panel-footer-temperature'>
-
-              <div className='digit'>+4</div>
-              <div className='upper'>
-                <div className='format'>
-                  <span>*C</span>|
-                  <span>*F</span>
-                </div>
-              </div>
-
-            </div>
-
-            <div className='panel-footer-feels'>
-              Feels like +1
-            </div>
-          </div>
-
-          <div className='panel-footer-right'>
-            <div>Wind 12 ms</div>
-            <div>Humidity 12 ms</div>
-            <div>Pressure 12 ms</div>
-          </div>
-        </div>
-
+      <div className='panel-chart'>
 
       </div>
+
+      <div className='panel-footer'>
+        <div className='panel-footer-left'>
+
+          <div className='panel-footer-temperature'>
+
+            <div className='digit'>
+              {temperatureDigit}{Math.round(temperatureValue)}
+            </div>
+
+            <div className='upper'>
+              <div className='format'>
+                <span
+                  style={{ color: (metrics === 'Celsius') ? '#000000' : '#8D8D8D' }}
+                  onClick={() => switchMetrics('Celsius')}>°C</span>
+                |
+                <span
+                  style={{ color: (metrics === 'Fahrenheit') ? '#000000' : '#8D8D8D' }}
+                  onClick={() => switchMetrics('Fahrenheit')}>°F</span>
+              </div>
+            </div>
+
+          </div>
+
+          <div className='panel-footer-feels'>
+            Feels like: <b>{feelsDigit}{Math.round(feelsValue)}{(metrics === 'Celsius') ? '°C' : '°F'}</b>
+          </div>
+        </div>
+
+        <div className='panel-footer-right'>
+          <div>Wind: <b
+            style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+            {Math.round(props.wind)} m/s</b></div>
+          <div>Humidity: <b
+            style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+            {props.humidity}%</b></div>
+          <div>Pressure: <b
+            style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+            {props.pressure}Pa</b></div>
+        </div>
+      </div>
+
+
+    </div>
   );
 }
 

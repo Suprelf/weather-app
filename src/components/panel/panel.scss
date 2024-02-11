@@ -5,7 +5,6 @@
     height: 257px;
     padding: 10px 15px;
 
-    background: $primary-color 0% 0% no-repeat padding-box;
     box-shadow: 0px 3px 6px #00000029;
     border-radius: 5px;
     opacity: 1;
@@ -24,6 +23,13 @@
             flex-direction: column;
             justify-content: space-between;
             gap: 4px;
+
+            .panel-header-left-item {
+                height: 25px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
         }
 
         .panel-header-right {
@@ -51,11 +57,16 @@
             flex-direction: column;
             justify-content: space-between;
 
+            .panel-footer-feels {
+                color: $gray-mid-color;
+            }
+
             .panel-footer-temperature {
                 display: flex;
                 flex-direction: row;
                 gap: 5px;
-
+                width: 146px;
+                justify-content: space-between;
 
                 .digit {
                     font: normal normal normal 44px/64px Jost;
@@ -66,8 +77,10 @@
                         display: flex;
                         flex-direction: row;
                         gap: 10px;
+                        color: $gray-dark-color;
 
                         font: normal normal normal 22px/32px Jost;
+                        cursor: pointer;
                     }
                 }
             }

@@ -81,7 +81,7 @@
 
 .pac-item,
 .pac-item-query {
-    width: 549px;
+    width: 560px;
     padding-bottom: 2px;
     height: 23px;
 
@@ -94,4 +94,8 @@
 }
 .pac-icon {
     display: none;
+}
+.pac-container:after {
+    background-image: none !important;
+    height: 0px;
 }
