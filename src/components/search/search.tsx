@@ -1,30 +1,34 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './search.scss';
 import Autocomplete from "react-google-autocomplete";
+import InputRawData from '../../interfaces/inputRawData';
 
-function Search() {
+function Search({passData}: any) {
 
-  function handleSearch(e: any) {
+  const [currentData, setCurrentData] = useState<InputRawData>()
+
+  function passDataToApp(e: any) {
     e.preventDefault();
 
-    const form = e.target;
-    const formData = new FormData(form);
-
-    const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
+    console.log(currentData)
+    passData(currentData)
   }
-
-
 
   return (
     <div className='search-container'>
 
-      <form onSubmit={handleSearch} className='search-functional'>
+      <form onSubmit={passDataToApp} className='search-functional'>
         <Autocomplete
           id = 'autocomplete-input'
           apiKey={'AIzaSyA9bslaj5Bl5nLuQQXe8rr_PkhDvvZqzMs'}
           onPlaceSelected={(place) => {
-            console.log(place);
+            console.log(place)
+            setCurrentData({
+              name: place.address_components[0].long_name,
+              country: place.address_components[3].short_name,
+              lat:  place.geometry.location.lat(),
+              lon:  place.geometry.location.lng()
+            })
           }}
           className='search-input'
           language='en'          

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './panel.scss';
-import City from '../../interfaces';
+import City from '../../interfaces/city';
 
 function Panel(props: City) {
 
@@ -46,7 +46,7 @@ function Panel(props: City) {
 
     }
 
-  }, [metrics])
+  }, [metrics, temperatureDigit, feelsDigit])
 
 
 
@@ -55,7 +55,9 @@ function Panel(props: City) {
 
       <div className='panel-header'>
         <div className='panel-header-left'>
-          <div className='panel-header-left-item' style={{ fontSize: smallName ? '14px' : '16px' }}>{props.name}</div>
+          <div className='panel-header-left-item' 
+          style={{ fontSize: smallName ? '13px' : '16px' }}>
+            {props.name}, {props.country}</div>
           <div className='panel-header-left-item'>{props.date}</div>
         </div>
 

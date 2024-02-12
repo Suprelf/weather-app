@@ -3,7 +3,8 @@ import './App.scss';
 import Panel from './components/panel/panel';
 import Language from './components/language/language';
 import Search from './components/search/search';
-import City from './interfaces';
+import City from './interfaces/city';
+import InputRawData from './interfaces/inputRawData';
 import moment from 'moment';
 
 
@@ -13,14 +14,14 @@ function App() {
   //https://api.openweathermap.org/data/2.5/forecast?lat=${glocation[0]}&lon=${glocation[1]}&appid=a53096724844cd3d01b653c9ae7d141a
 
   const Gkey = 'AIzaSyA9bslaj5Bl5nLuQQXe8rr_PkhDvvZqzMs'
+  const WeatherKey = 'a53096724844cd3d01b653c9ae7d141a'
   const [glocation, setGlocation] = useState<number[]>([])
   const [glocationLoaded, setGlocationLoaded] = useState<boolean>(false)
 
   const [displayedCities, setDisplayedCities] = useState<City[]>([])
 
-
-  function getCityData(cityName: Array<any>, lat: number, lon: number) {
-    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&units=metric&appid=a53096724844cd3d01b653c9ae7d141a`)
+  function getWeatherData(searchData: InputRawData | any) {
+    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${searchData.lat}&lon=${searchData.lon}&units=metric&appid=${WeatherKey}`)
       .then((response) => response.json())
       .then((weatherData) => {
 
@@ -28,8 +29,8 @@ function App() {
           ...displayedCities, {
             lat: weatherData.lat,
             lon: weatherData.lon,
-            name: cityName[0].name,
-            country: cityName[0].country,
+            name: searchData.name,
+            country: searchData.country,
 
             date: moment().format('dddd, Do MMMM, h:mm'),
 
@@ -46,7 +47,11 @@ function App() {
       .catch((err) => { console.log(err.message); console.log('failed to fetch city weather') })
   }
 
+  function getInputData(data: InputRawData) {
+    getWeatherData(data)
+  }
 
+  
   //get geopos
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -57,14 +62,22 @@ function App() {
   //get local city weather
   useEffect(() => {
     if (glocationLoaded && (displayedCities.length === 0)) {
-      fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${glocation[0]}&lon=${glocation[1]}&limit=1&appid=a53096724844cd3d01b653c9ae7d141a`)
+      fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${glocation[0]}&lon=${glocation[1]}&limit=1&appid=${WeatherKey}`)
         .then((response) => response.json())
         .then((cityName) => {
-          getCityData(cityName, glocation[0], glocation[1])
+          getWeatherData(
+            {
+              name: cityName[0].name,
+              country: cityName[0].country,
+              lat: cityName[0].lat,
+              lon: cityName[0].lon
+            }
+          )
         })
         .catch((err) => { console.log(err.message); console.log('failed to fetch city name') })
     }
   }, [glocationLoaded]);
+
 
 
 
@@ -76,24 +89,24 @@ function App() {
       </div>
 
       <div className='app-seacrh'>
-        <Search></Search>
+        <Search passData={getInputData}></Search>
       </div>
 
       <div className='app-panels'>
         {displayedCities.map((cityItem, id) =>
           <Panel
             key={id}
-            lat={cityItem.lat} 
-            lon={cityItem.lon} 
-            name={cityItem.name} 
-            country={cityItem.country} 
-            date={cityItem.date} 
-            temperature={cityItem.temperature} 
-            weather={cityItem.weather} 
-            wind={cityItem.wind} 
-            humidity={cityItem.humidity} 
-            pressure={cityItem.pressure} 
-            feels={cityItem.feels}/>
+            lat={cityItem.lat}
+            lon={cityItem.lon}
+            name={cityItem.name}
+            country={cityItem.country}
+            date={cityItem.date}
+            temperature={cityItem.temperature}
+            weather={cityItem.weather}
+            wind={cityItem.wind}
+            humidity={cityItem.humidity}
+            pressure={cityItem.pressure}
+            feels={cityItem.feels} />
         )}
       </div>
 

@@ -14,5 +14,8 @@ export default interface City {
     feels: number
 }
 
+
+
+
 //add Icon
 //add Celsius/Fahrenheit 
