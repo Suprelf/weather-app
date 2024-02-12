@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './panel.scss';
 import City from '../../interfaces/city';
+import Chart from '../chart/chart';
 
 function Panel(props: City) {
 
@@ -48,15 +49,13 @@ function Panel(props: City) {
 
   }, [metrics, temperatureDigit, feelsDigit])
 
-
-
   return (
     <div className='panel-container' style={{ backgroundColor: (props.temperature > 0) ? '#FFFAF1' : '#F1F2FF' }}>
 
       <div className='panel-header'>
         <div className='panel-header-left'>
-          <div className='panel-header-left-item' 
-          style={{ fontSize: smallName ? '13px' : '16px' }}>
+          <div className='panel-header-left-item'
+            style={{ fontSize: smallName ? '13px' : '16px' }}>
             {props.name}, {props.country}</div>
           <div className='panel-header-left-item'>{props.date}</div>
         </div>
@@ -68,7 +67,7 @@ function Panel(props: City) {
       </div>
 
       <div className='panel-chart'>
-
+        <Chart chartData={props.historyData} temperature={temperatureValue}></Chart>
       </div>
 
       <div className='panel-footer'>

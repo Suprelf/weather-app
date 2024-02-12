@@ -6,6 +6,7 @@ import Search from './components/search/search';
 import City from './interfaces/city';
 import InputRawData from './interfaces/inputRawData';
 import moment from 'moment';
+import WeatherHistoryData from './interfaces/weatherHistoryData';
 
 
 
@@ -21,9 +22,27 @@ function App() {
   const [displayedCities, setDisplayedCities] = useState<City[]>([])
 
   function getWeatherData(searchData: InputRawData | any) {
+
+    function formatHistorical(historical: any) {
+      let formatedData: Array<WeatherHistoryData> = []
+
+      console.log(historical)
+
+      historical.map((day: any) => {
+        console.log(day.dt)
+        formatedData.push({
+          date: moment.unix(day.dt).format('DD.MM'),
+          temperature: Math.round(day.temp.day)
+        })
+      })
+
+      return formatedData
+    }
+
     fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${searchData.lat}&lon=${searchData.lon}&units=metric&appid=${WeatherKey}`)
       .then((response) => response.json())
       .then((weatherData) => {
+        console.log(weatherData)
 
         setDisplayedCities([
           ...displayedCities, {
@@ -39,7 +58,9 @@ function App() {
             wind: weatherData.current.wind_speed,
             humidity: weatherData.current.humidity,
             pressure: weatherData.current.pressure,
-            feels: weatherData.current.feels_like
+            feels: weatherData.current.feels_like,
+
+            historyData: formatHistorical(weatherData.daily)
           }
         ])
 
@@ -106,7 +127,10 @@ function App() {
             wind={cityItem.wind}
             humidity={cityItem.humidity}
             pressure={cityItem.pressure}
-            feels={cityItem.feels} />
+            feels={cityItem.feels} 
+            
+            historyData={cityItem.historyData} 
+            />
         )}
       </div>
 

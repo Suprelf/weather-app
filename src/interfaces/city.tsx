@@ -12,6 +12,11 @@ export default interface City {
     humidity: number
     pressure: number
     feels: number
+
+    icon?: string
+    defaultMetrics?: string
+
+    historyData: Array<any>
 }
 
 

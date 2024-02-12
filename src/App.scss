@@ -35,8 +35,8 @@ $chart-default-color: #FFF4F4;
         flex-direction: row;
         flex-wrap: wrap;
         gap: 16px;
-
-        justify-content: space-between;
+        
+        justify-content: space-evenly;
     }
 }
 

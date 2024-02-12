@@ -3,15 +3,18 @@ import './search.scss';
 import Autocomplete from "react-google-autocomplete";
 import InputRawData from '../../interfaces/inputRawData';
 
-function Search({passData}: any) {
+function Search({ passData }: any) {
 
   const [currentData, setCurrentData] = useState<InputRawData>()
 
   function passDataToApp(e: any) {
     e.preventDefault();
+    if (currentData != undefined) {
+      console.log(currentData)
+      passData(currentData)
+    }
 
-    console.log(currentData)
-    passData(currentData)
+
   }
 
   return (
@@ -19,19 +22,26 @@ function Search({passData}: any) {
 
       <form onSubmit={passDataToApp} className='search-functional'>
         <Autocomplete
-          id = 'autocomplete-input'
+          id='autocomplete-input'
           apiKey={'AIzaSyA9bslaj5Bl5nLuQQXe8rr_PkhDvvZqzMs'}
           onPlaceSelected={(place) => {
             console.log(place)
-            setCurrentData({
-              name: place.address_components[0].long_name,
-              country: place.address_components[3].short_name,
-              lat:  place.geometry.location.lat(),
-              lon:  place.geometry.location.lng()
-            })
+            try {
+              setCurrentData({
+                name: place.address_components[0].long_name,
+                country: place.address_components[3].short_name,
+                lat: place.geometry.location.lat(),
+                lon: place.geometry.location.lng()
+              })
+            }
+            catch {
+              alert('Failed to get country name')
+              setCurrentData(undefined)
+            }
+
           }}
           className='search-input'
-          language='en'          
+          language='en'
         />
         <button className='search-button' type="submit">Add</button>
       </form>
