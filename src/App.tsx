@@ -9,7 +9,6 @@ import moment from 'moment';
 import WeatherHistoryData from './interfaces/weatherHistoryData';
 
 
-
 function App() {
   //https://api.openweathermap.org/data/2.5/forecast?q={city_name}&appid=a53096724844cd3d01b653c9ae7d141a
   //https://api.openweathermap.org/data/2.5/forecast?lat=${glocation[0]}&lon=${glocation[1]}&appid=a53096724844cd3d01b653c9ae7d141a
@@ -18,61 +17,109 @@ function App() {
   const WeatherKey = 'a53096724844cd3d01b653c9ae7d141a'
   const [glocation, setGlocation] = useState<number[]>([])
   const [glocationLoaded, setGlocationLoaded] = useState<boolean>(false)
+  const [localCityDisplayed, setLocalCityDisplayed] = useState<boolean>(false)
 
   const [displayedCities, setDisplayedCities] = useState<City[]>([])
 
-  function getWeatherData(searchData: InputRawData | any) {
+  const [storageCityAdded, setStorageCityAdded] = useState<number>(0)
+  function LocalStorage_addCity(city: City) {
+    let storedCities: Array<City> = JSON.parse(localStorage.getItem('cities') ?? '[]')
+    let isPresent = false
 
-    function formatHistorical(historical: any) {
-      let formatedData: Array<WeatherHistoryData> = []
-
-      console.log(historical)
-
-      historical.map((day: any) => {
-        console.log(day.dt)
-        formatedData.push({
-          date: moment.unix(day.dt).format('DD.MM'),
-          temperature: Math.round(day.temp.day)
-        })
-      })
-
-      return formatedData
+    storedCities.map((storedCity) => {
+      if (city.id === storedCity.id) {
+        isPresent = true
+      }
+    })
+    if (!isPresent) {
+      storedCities.push(city)
     }
+
+    localStorage.setItem('cities', JSON.stringify(storedCities))
+    setStorageCityAdded(storageCityAdded+1)
+  }
+
+  function formatHistorical(historical: any) {
+    let formatedData: Array<WeatherHistoryData> = []
+    historical.map((day: any) => {
+      formatedData.push({
+        date: moment.unix(day.dt).format('DD.MM'),
+        temperature: Math.round(day.temp.day)
+      })
+    })
+
+    return formatedData
+  }
+
+  function getLocalWeatherData(searchData: InputRawData | any) {
 
     fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${searchData.lat}&lon=${searchData.lon}&units=metric&appid=${WeatherKey}`)
       .then((response) => response.json())
       .then((weatherData) => {
-        console.log(weatherData)
 
-        setDisplayedCities([
-          ...displayedCities, {
-            lat: weatherData.lat,
-            lon: weatherData.lon,
-            name: searchData.name,
-            country: searchData.country,
+        setDisplayedCities([...displayedCities, {
+          id: searchData.name + searchData.country,
 
-            date: moment().format('dddd, Do MMMM, h:mm'),
+          lat: weatherData.lat,
+          lon: weatherData.lon,
+          name: searchData.name,
+          country: searchData.country,
 
-            temperature: weatherData.current.temp,
-            weather: weatherData.current.weather[0].main,
-            wind: weatherData.current.wind_speed,
-            humidity: weatherData.current.humidity,
-            pressure: weatherData.current.pressure,
-            feels: weatherData.current.feels_like,
+          date: moment().format('dddd, Do MMMM, h:mm'),
 
-            historyData: formatHistorical(weatherData.daily)
-          }
+          temperature: weatherData.current.temp,
+          weather: weatherData.current.weather[0].main,
+          wind: weatherData.current.wind_speed,
+          humidity: weatherData.current.humidity,
+          pressure: weatherData.current.pressure,
+          feels: weatherData.current.feels_like,
+
+          icon: weatherData.current.weather[0].icon,
+          metrics: "Celsius",
+          historyData: formatHistorical(weatherData.daily)
+        }
         ])
+        setLocalCityDisplayed(true)
+      })
+      .catch((err) => { console.log(err.message); console.log('failed to fetch city weather') })
+  }
+
+  function getInputWeatherData(searchData: InputRawData) {
+    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${searchData.lat}&lon=${searchData.lon}&units=metric&appid=${WeatherKey}`)
+      .then((response) => response.json())
+      .then((weatherData) => {
+
+        LocalStorage_addCity({
+          id: searchData.name + searchData.country,
+
+          lat: weatherData.lat,
+          lon: weatherData.lon,
+          name: searchData.name,
+          country: searchData.country,
+
+          date: moment().format('dddd, Do MMMM, h:mm'),
+
+          temperature: weatherData.current.temp,
+          weather: weatherData.current.weather[0].main,
+          wind: weatherData.current.wind_speed,
+          humidity: weatherData.current.humidity,
+          pressure: weatherData.current.pressure,
+          feels: weatherData.current.feels_like,
+
+          icon: weatherData.current.weather[0].icon,
+          metrics: "Celsius",
+          historyData: formatHistorical(weatherData.daily)
+        })
 
       })
       .catch((err) => { console.log(err.message); console.log('failed to fetch city weather') })
   }
 
-  function getInputData(data: InputRawData) {
-    getWeatherData(data)
+  function getInputRawData(data: InputRawData) {
+    getInputWeatherData(data)
   }
 
-  
+
   //get geopos
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -80,13 +127,14 @@ function App() {
       setGlocationLoaded(true)
     });
   }, []);
+
   //get local city weather
   useEffect(() => {
-    if (glocationLoaded && (displayedCities.length === 0)) {
+    if (glocationLoaded) {
       fetch(`https://api.openweathermap.org/geo/1.0/reverse?lat=${glocation[0]}&lon=${glocation[1]}&limit=1&appid=${WeatherKey}`)
         .then((response) => response.json())
         .then((cityName) => {
-          getWeatherData(
+          getLocalWeatherData(
             {
               name: cityName[0].name,
               country: cityName[0].country,
@@ -99,8 +147,25 @@ function App() {
     }
   }, [glocationLoaded]);
 
+  //get localstorage cities
+  useEffect(() => {
+    if (localCityDisplayed) {
+      let storedCities: Array<City> = JSON.parse(localStorage.getItem('cities') ?? '[]')
 
+      setDisplayedCities([...displayedCities, ...storedCities])
+    }
 
+  }, [localCityDisplayed])
+
+  //update on added
+  useEffect(() => {
+    if (storageCityAdded) {
+      let storedCities: Array<City> = JSON.parse(localStorage.getItem('cities') ?? '[]')
+
+      setDisplayedCities([...displayedCities, storedCities[storedCities.length-1]])
+    }
+
+  }, [storageCityAdded])
 
   return (
     <div className='app-layout'>
@@ -110,13 +175,13 @@ function App() {
       </div>
 
       <div className='app-seacrh'>
-        <Search passData={getInputData}></Search>
+        <Search passData={getInputRawData}></Search>
       </div>
 
       <div className='app-panels'>
-        {displayedCities.map((cityItem, id) =>
+        {displayedCities.map((cityItem) =>
           <Panel
-            key={id}
+            id={cityItem.id}
             lat={cityItem.lat}
             lon={cityItem.lon}
             name={cityItem.name}
@@ -127,10 +192,14 @@ function App() {
             wind={cityItem.wind}
             humidity={cityItem.humidity}
             pressure={cityItem.pressure}
-            feels={cityItem.feels} 
-            
-            historyData={cityItem.historyData} 
-            />
+            feels={cityItem.feels}
+
+            icon={cityItem.icon}
+            metrics={cityItem.metrics}
+
+            historyData={cityItem.historyData}
+
+          />
         )}
       </div>
 

@@ -1,4 +1,6 @@
 export default interface City {
+    id: string
+
     lat: number
     lon: number
     name: string
@@ -13,8 +15,8 @@ export default interface City {
     pressure: number
     feels: number
 
-    icon?: string
-    defaultMetrics?: string
+    icon: string
+    metrics: string
 
     historyData: Array<any>
 }

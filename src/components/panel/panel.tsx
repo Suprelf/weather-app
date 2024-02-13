@@ -9,25 +9,35 @@ function Panel(props: City) {
   const [temperatureDigit, setTemperatureDigit] = useState<string>('')
   const [feelsDigit, setFeelsDigit] = useState<string>('')
 
-  const [metrics, setMetrics] = useState<string>('Celsius')
+  const [metrics, setMetrics] = useState<string>(props.metrics)
   const [metricsTouched, setMetricsTouched] = useState<boolean>(false)
   function switchMetrics(format: string) {
-
     setMetricsTouched(true)
     if (format !== metrics) {
       setMetrics(format)
     }
 
+    let storedCities: Array<City> = JSON.parse(localStorage.getItem('cities') ?? '[]')
+    storedCities.map((city) => {
+      if (city.id === props.id) {
+        city.metrics = format
+      }
+    })
+
+    localStorage.setItem('cities', JSON.stringify(storedCities))
   }
 
   const [temperatureValue, setTemperatureValue] = useState<number>(props.temperature)
   const [feelsValue, setFeelsValue] = useState<number>(props.feels)
 
+  useEffect(() => {
+    if (metrics === 'Fahrenheit' && metricsTouched === false) {
+      setTemperatureValue((temperatureValue * (9 / 5)) + 32)
+      setFeelsValue((feelsValue * (9 / 5)) + 32)
+    }
+  }, [])
 
   useEffect(() => {
-    if (props.name.length > 30) {
-      setSmallName(true)
-    }
 
     if (temperatureValue > 0) {
       setTemperatureDigit('+')
@@ -40,14 +50,19 @@ function Panel(props: City) {
     if (metrics === 'Celsius' && metricsTouched) {
       setTemperatureValue((temperatureValue - 32) * (5 / 9))
       setFeelsValue((feelsValue - 32) * (5 / 9))
-
     } else if (metrics === 'Fahrenheit' && metricsTouched) {
       setTemperatureValue((temperatureValue * (9 / 5)) + 32)
       setFeelsValue((feelsValue * (9 / 5)) + 32)
-
     }
 
   }, [metrics, temperatureDigit, feelsDigit])
+
+  useEffect(() => {
+    if (props.name.length > 30) {
+      setSmallName(true)
+    }
+  })
+
 
   return (
     <div className='panel-container' style={{ backgroundColor: (props.temperature > 0) ? '#FFFAF1' : '#F1F2FF' }}>
@@ -61,7 +76,13 @@ function Panel(props: City) {
         </div>
 
         <div className='panel-header-right'>
-          <div>icon</div>
+
+          <img
+            src={`https://openweathermap.org/img/wn/${props.icon}@2x.png`}
+            alt=''
+            style={{ width: '30px', height: '30px'}}>
+          </img>
+
           <div>{props.weather}</div>
         </div>
       </div>
