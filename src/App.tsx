@@ -10,18 +10,15 @@ import WeatherHistoryData from './interfaces/weatherHistoryData';
 
 
 function App() {
-  //https://api.openweathermap.org/data/2.5/forecast?q={city_name}&appid=a53096724844cd3d01b653c9ae7d141a
-  //https://api.openweathermap.org/data/2.5/forecast?lat=${glocation[0]}&lon=${glocation[1]}&appid=a53096724844cd3d01b653c9ae7d141a
-
   const Gkey = 'AIzaSyA9bslaj5Bl5nLuQQXe8rr_PkhDvvZqzMs'
   const WeatherKey = 'a53096724844cd3d01b653c9ae7d141a'
+
   const [glocation, setGlocation] = useState<number[]>([])
   const [glocationLoaded, setGlocationLoaded] = useState<boolean>(false)
   const [localCityDisplayed, setLocalCityDisplayed] = useState<boolean>(false)
-
   const [displayedCities, setDisplayedCities] = useState<City[]>([])
-
   const [storageCityAdded, setStorageCityAdded] = useState<number>(0)
+
   function LocalStorage_addCity(city: City) {
     let storedCities: Array<City> = JSON.parse(localStorage.getItem('cities') ?? '[]')
     let isPresent = false
@@ -119,7 +116,6 @@ function App() {
     getInputWeatherData(data)
   }
 
-
   //get geopos
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -198,7 +194,6 @@ function App() {
             metrics={cityItem.metrics}
 
             historyData={cityItem.historyData}
-
           />
         )}
       </div>

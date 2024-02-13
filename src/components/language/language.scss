@@ -9,9 +9,13 @@
     align-items: flex-end;
 
     .language-header {
+        width: 66px;
         display: flex;
         flex-direction: row;
         gap: 6px;
+        align-items: center;
+
+        justify-content: space-between;
     }
 
     .language-select {
