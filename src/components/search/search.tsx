@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
-import './search.scss';
-import Autocomplete from "react-google-autocomplete";
-import InputRawData from '../../interfaces/inputRawData';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Autocomplete from "react-google-autocomplete";
+
+import './search.scss';
+
+import InputRawData from '../../interfaces/inputRawData';
+
 
 function Search({ passData }: any) {
 
-  const {t, i18n} = useTranslation()
+  const { t } = useTranslation()
 
   const [currentData, setCurrentData] = useState<InputRawData>()
 
@@ -16,8 +19,6 @@ function Search({ passData }: any) {
       console.log(currentData)
       passData(currentData)
     }
-
-
   }
 
   return (
@@ -27,7 +28,7 @@ function Search({ passData }: any) {
         <Autocomplete
           id='autocomplete-input'
           apiKey={'AIzaSyA9bslaj5Bl5nLuQQXe8rr_PkhDvvZqzMs'}
-          
+
           onPlaceSelected={(place) => {
             console.log(place)
             try {

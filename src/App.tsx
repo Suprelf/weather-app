@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import moment from 'moment';
+
 import './App.scss';
+
 import Panel from './components/panel/panel';
 import Language from './components/language/language';
 import Search from './components/search/search';
 import City from './interfaces/city';
 import InputRawData from './interfaces/inputRawData';
-import moment from 'moment';
 import WeatherHistoryData from './interfaces/weatherHistoryData';
 
 

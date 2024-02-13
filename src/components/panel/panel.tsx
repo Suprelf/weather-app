@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
-import './panel.scss';
-import City from '../../interfaces/city';
-import Chart from '../chart/chart';
 import { useTranslation } from 'react-i18next';
+
+import Chart from '../chart/chart';
+
+import './panel.scss';
+
+import City from '../../interfaces/city';
+
+
 
 function Panel(props: City) {
 
@@ -234,7 +239,6 @@ function Panel(props: City) {
 
         </div>
       </div>
-
 
     </div>
   );

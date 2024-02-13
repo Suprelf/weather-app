@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import './chart.scss';
+import  { useState } from 'react';
 import { AreaChart, Area, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
+
+import './chart.scss';
+
 import WeatherHistoryData from '../../interfaces/weatherHistoryData';
 
 

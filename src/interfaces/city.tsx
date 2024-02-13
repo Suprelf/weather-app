@@ -1,3 +1,5 @@
+import WeatherHistoryData from "./weatherHistoryData"
+
 export default interface City {
     id: string
 
@@ -18,11 +20,5 @@ export default interface City {
     icon: string
     metrics: string
 
-    historyData: Array<any>
+    historyData: Array<WeatherHistoryData>
 }
-
-
-
-
-//add Icon
-//add Celsius/Fahrenheit 
