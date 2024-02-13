@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './panel.scss';
 import City from '../../interfaces/city';
 import Chart from '../chart/chart';
+import { useTranslation } from 'react-i18next';
 
 function Panel(props: City) {
+
+  const { t } = useTranslation()
 
   const [smallName, setSmallName] = useState<boolean>(false)
   const [temperatureDigit, setTemperatureDigit] = useState<string>('')
@@ -30,6 +33,23 @@ function Panel(props: City) {
   const [temperatureValue, setTemperatureValue] = useState<number>(props.temperature)
   const [feelsValue, setFeelsValue] = useState<number>(props.feels)
 
+  const [hebrew, setHebrew] = useState<boolean>(false)
+
+  const [formatedDate, setFormatedDate] = useState<Array<string>>([])
+  const [dateFormating, setDateFormating] = useState(props.date)
+
+  //format date for translation
+  useEffect(() => {
+    let splited = dateFormating.split(', ')
+    let day = splited[1].split(' ')
+    let formated = [splited[0], day[0].substring(0, day[0].length - 2), day[1], splited[2]]
+
+
+    setFormatedDate(formated)
+    console.log(formatedDate)
+  }, [])
+
+  //initial Far check
   useEffect(() => {
     if (metrics === 'Fahrenheit' && metricsTouched === false) {
       setTemperatureValue((temperatureValue * (9 / 5)) + 32)
@@ -37,6 +57,7 @@ function Panel(props: City) {
     }
   }, [])
 
+  //switch temperature check
   useEffect(() => {
 
     if (temperatureValue > 0) {
@@ -57,9 +78,21 @@ function Panel(props: City) {
 
   }, [metrics, temperatureDigit, feelsDigit])
 
+  //long name check
   useEffect(() => {
     if (props.name.length > 30) {
       setSmallName(true)
+    }
+  })
+
+  //hebrew switch check
+  useEffect(() => {
+    if (localStorage.getItem('language') == 'HE') {
+      setHebrew(true)
+      console.log('hebrew set ', hebrew)
+    } else {
+      setHebrew(false)
+      console.log('hebrew set ', hebrew)
     }
   })
 
@@ -71,8 +104,19 @@ function Panel(props: City) {
         <div className='panel-header-left'>
           <div className='panel-header-left-item'
             style={{ fontSize: smallName ? '13px' : '16px' }}>
-            {props.name}, {props.country}</div>
-          <div className='panel-header-left-item'>{props.date}</div>
+            {props.name}, {props.country}
+          </div>
+          <div className='panel-header-left-item'>
+            {!hebrew ?
+              <div>
+                {t(formatedDate[0])}, {formatedDate[1]} {t(formatedDate[2])}, {formatedDate[3]}
+              </div>
+              :
+              <div>
+                {t(formatedDate[0])} ,{t(formatedDate[2])} {formatedDate[1]} ,{formatedDate[3]}
+              </div>
+            }
+          </div>
         </div>
 
         <div className='panel-header-right'>
@@ -80,10 +124,10 @@ function Panel(props: City) {
           <img
             src={`https://openweathermap.org/img/wn/${props.icon}@2x.png`}
             alt=''
-            style={{ width: '30px', height: '30px'}}>
+            style={{ width: '30px', height: '30px' }}>
           </img>
 
-          <div>{props.weather}</div>
+          <div>{t(props.weather)}</div>
         </div>
       </div>
 
@@ -115,20 +159,79 @@ function Panel(props: City) {
           </div>
 
           <div className='panel-footer-feels'>
-            Feels like: <b>{feelsDigit}{Math.round(feelsValue)}{(metrics === 'Celsius') ? '°C' : '°F'}</b>
+
+            {!hebrew ?
+              <div>
+                <span>{t('Feels')}</span>
+                <b>
+                  {feelsDigit}{Math.round(feelsValue)}{(metrics === 'Celsius') ? '°C' : '°F'}
+                </b>
+              </div>
+              :
+              <div>
+                <b>
+                  {feelsDigit}{Math.round(feelsValue)}{(metrics === 'Celsius') ? '°C' : '°F'}
+                </b>
+                <span>{t('Feels')}</span>
+              </div>}
+
           </div>
         </div>
 
         <div className='panel-footer-right'>
-          <div>Wind: <b
-            style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
-            {Math.round(props.wind)} m/s</b></div>
-          <div>Humidity: <b
-            style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
-            {props.humidity}%</b></div>
-          <div>Pressure: <b
-            style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
-            {props.pressure}Pa</b></div>
+
+          {!hebrew ?
+            <div>
+              <span>{t('Wind')}</span>
+              <b style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+                {Math.round(props.wind)}{t('ms')}
+              </b>
+            </div>
+            :
+            <div>
+              <span>{t('Wind')}</span>
+              <b style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+                {t('ms')}{Math.round(props.wind)}
+              </b>
+            </div>
+          }
+
+          {!hebrew ?
+            <div>
+              <span>{t('Humidity')}</span>
+              <b
+                style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+                {props.humidity}%
+              </b>
+            </div>
+            :
+            <div>
+              <span>{t('Humidity')}</span>
+              <b
+                style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+                {props.humidity}%
+              </b>
+            </div>
+          }
+
+          {!hebrew ?
+            <div>
+              <span>{t('Pressure')}</span>
+              <b
+                style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+                {props.pressure}Pa
+              </b>
+            </div>
+            :
+            <div>
+              <b
+                style={{ color: (props.temperature > 0) ? '#FFA25B' : '#459DE9' }}>
+                {props.pressure}Pa
+              </b>
+              <span> {t('Pressure')}</span>
+            </div>
+          }
+
         </div>
       </div>
 

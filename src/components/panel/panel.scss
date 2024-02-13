@@ -49,6 +49,7 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        height: 87px;
 
         .panel-footer-left {
             display: flex;
@@ -64,6 +65,7 @@
                 flex-direction: row;
                 gap: 5px;
                 width: 146px;
+                height: 64px;
                 justify-content: space-between;
 
                 .digit {
@@ -90,7 +92,25 @@
             text-align: right;
 
             justify-content: space-between;
+
+
         }
 
     }
+}
+
+.hebrew-layout {
+    width: auto;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    gap: 6px;
+}
+
+.hebrew-layout-feels {
+    width: auto;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 6px;
 }

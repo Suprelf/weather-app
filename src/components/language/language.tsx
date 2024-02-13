@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import './language.scss';
+import { useTranslation } from 'react-i18next';
 
 function Language() {
 
@@ -7,8 +8,16 @@ function Language() {
     setIsOpen(!isOpen)
   }
 
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('EN')
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(localStorage.getItem('language') ?? 'EN')
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const { i18n } = useTranslation()
+
+  function onSelected(e: Event | any) {
+    setSelectedLanguage(e.currentTarget.id);
+    switchOpen();
+    i18n.changeLanguage(e.currentTarget.id);
+    localStorage.setItem('language', e.currentTarget.id)
+  }
 
   return (
     <div className='language-container'>
@@ -26,11 +35,11 @@ function Language() {
       {(isOpen) &&
         <div className='language-select'>
           <div className='language-option' id='EN'
-            onClick={(e) => { setSelectedLanguage(e.currentTarget.id) }}>EN</div>
+            onClick={(e) => onSelected(e)}>EN</div>
           <div className='language-option' id='UA'
-            onClick={(e) => { setSelectedLanguage(e.currentTarget.id) }}>UA</div>
+            onClick={(e) => onSelected(e)}>UA</div>
           <div className='language-option' id='HE'
-            onClick={(e) => { setSelectedLanguage(e.currentTarget.id) }}>HE</div>
+            onClick={(e) => onSelected(e)}>HE</div>
         </div>
       }
 

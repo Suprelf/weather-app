@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import './search.scss';
 import Autocomplete from "react-google-autocomplete";
 import InputRawData from '../../interfaces/inputRawData';
+import { useTranslation } from 'react-i18next';
 
 function Search({ passData }: any) {
+
+  const {t, i18n} = useTranslation()
 
   const [currentData, setCurrentData] = useState<InputRawData>()
 
@@ -24,6 +27,7 @@ function Search({ passData }: any) {
         <Autocomplete
           id='autocomplete-input'
           apiKey={'AIzaSyA9bslaj5Bl5nLuQQXe8rr_PkhDvvZqzMs'}
+          
           onPlaceSelected={(place) => {
             console.log(place)
             try {
@@ -35,7 +39,7 @@ function Search({ passData }: any) {
               })
             }
             catch {
-              alert('Failed to get country name')
+              alert(t('Failed'))
               setCurrentData(undefined)
             }
 
@@ -43,7 +47,9 @@ function Search({ passData }: any) {
           className='search-input'
           language='en'
         />
-        <button className='search-button' type="submit">Add</button>
+        <button className='search-button' type="submit">
+          {t('Add')}
+        </button>
       </form>
 
     </div>
